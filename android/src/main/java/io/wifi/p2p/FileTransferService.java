@@ -27,8 +27,8 @@ public class FileTransferService extends IntentService {
     private static final int SOCKET_TIMEOUT = 5000;
     public static final String ACTION_SEND_FILE = "io.wifi.p2p.SEND_FILE";
     public static final String EXTRAS_FILE_PATH = "file_url";
-    public static final String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
-    public static final String EXTRAS_GROUP_OWNER_PORT = "go_port";
+    public static final String EXTRAS_ADDRESS = "go_host";
+    public static final String EXTRAS_PORT = "go_port";
     public static final String REQUEST_RECEIVER_EXTRA = "REQUEST_RECEIVER_EXTRA";
     private static final String TAG = "RNWiFiP2P";
 
@@ -50,9 +50,9 @@ public class FileTransferService extends IntentService {
         Context context = getApplicationContext();
         if (intent.getAction().equals(ACTION_SEND_FILE)) {
             String fileUri = intent.getExtras().getString(EXTRAS_FILE_PATH);
-            String host = intent.getExtras().getString(EXTRAS_GROUP_OWNER_ADDRESS);
+            String host = intent.getExtras().getString(EXTRAS_ADDRESS);
             ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
-            int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
+            int port = intent.getExtras().getInt(EXTRAS_PORT);
             Socket socket = new Socket();
             Bundle bundle = new Bundle();
 

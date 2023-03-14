@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
 
 import static io.wifi.p2p.Utils.CHARSET;
 
@@ -18,7 +20,7 @@ import static io.wifi.p2p.Utils.CHARSET;
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
+public class MessageServerAsyncTask extends AsyncTask<Void, Void, WritableMap> {
     private static final String TAG = "RNWiFiP2P";
     private Callback callback;
 
@@ -44,16 +46,22 @@ public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected WritableMap doInBackground(Void... params) {
         try {
             ServerSocket serverSocket = new ServerSocket(8988);
             Log.i(TAG, "Server: Socket opened");
             Socket client = serverSocket.accept();
+            String clientAddress = client.getInetAddress().getHostAddress();
             Log.i(TAG, "Server: connection done");
 
             InputStream inputstream = client.getInputStream();
-            String result = convertStreamToString(inputstream);
+            String message = convertStreamToString(inputstream);
             serverSocket.close();
+
+            WritableMap result = Arguments.createMap();
+            result.putString("message", message);
+            result.putString("fromAddress", clientAddress);
+
             callback.invoke(result);
 
             return result;
