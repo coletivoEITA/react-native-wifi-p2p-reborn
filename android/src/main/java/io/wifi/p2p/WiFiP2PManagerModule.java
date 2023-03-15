@@ -541,7 +541,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
 
     @ReactMethod
     public void sendMessage(String message, final Promise promise) {
-        sendMessageTo(message, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+        if (wifiP2pInfo.groupOwnerAddress != null) {
+            sendMessageTo(message, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+        } else {
+            promise.reject("ERROR: sendMessage: no group owner (not connected?)");
+        }
     }
 
     @ReactMethod
